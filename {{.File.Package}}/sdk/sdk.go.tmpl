@@ -3,12 +3,8 @@ package {{.File.Package}}_sdk
 {{- $file := .File}}
 
 import (
-{{.File.Package}}  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
+"pb"  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
 )
-
-type Repository interface {
-{{range $m := .Service.Method}}{{with $t := $m.InputType | getMessageType $.File}} {{$m.Name}}({{range $f := $t.Field}}{{$f.Name|lowerCamelCase}} {{$f| goTypeWithPackage }} {{end}}) ({{with $out := $m.OutputType | getMessageType $.File}}{{range $f := $out.Field}}{{$f | goTypeWithPackage}}, {{end}}{{end}} error){{end}}{{end}}
-}
 
 
 // ------------------------- Public SDK -----------------------------
