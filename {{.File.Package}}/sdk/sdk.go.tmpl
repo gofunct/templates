@@ -1,32 +1,25 @@
-package {{.File.Package}}_sdk
+package {{.File.Name | dir}}
 
 {{- $file := .File}}
+{{- $currentFile := $file.Name | getProtoFile}}
 
 import (
-"pb"  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
+	"fmt"
+
+	"golang.org/x/net/context"
+
+	{{- range .File.Dependency}}
+	{{- $dependency := . | getProtoFile}}
+	{{$dependency.GoPkg}}
+	{{end}}
 )
 
+type Service struct {}
 
-// ------------------------- Public SDK -----------------------------
-
-type Sdk struct {}
-
-
-{{range $m := .Service.Method}}
-{{with $t := $m.InputType | getMessageType $.File}}
-{{if and (not $m.ServerStreaming) (not $m.ClientStreaming)}}
-{{/* ----------------------------- nominal case ---------------------------- */}}
-// {{$m.Name}} : {{$m | httpVerb}} {{$m | httpPath}}
-func (sdk *Sdk) {{$m.Name}}(ctx context.Context, {{if $t.OneofDecl}} req *{{.File.Package}}.{{$m.Name}}Request,{{else}}{{range $f := $t.Field}}
-  {{$f.Name|lowerCamelCase}} {{$f| goTypeWithGoPackage $.File}},{{end}}{{end}} token, requestID string)({{with $out := $m.OutputType | getMessageType $.File}}{{range $f := $out.Field}}{{$f.Name|lowerCamelCase}} {{$f | goTypeWithGoPackage $.File}}, {{end}}{{end}}err error) {
-
-  out := &{{.File.Package}}.{{$m.Name}}Response{}
-	_ = out
-
-{{with $out := $m.OutputType | getMessageType $.File}}
-  return {{range $f := $out.Field}}out.{{$f.Name|camelCase}}, {{end}}nil
-{{end}} {{/* with */}}
+{{- range .Service.Method}}
+{{- $in := .InputType | getMessageType $file}}
+{{- $out := .OutputType | getMessageType $file}}
+func (service Service) {{.Name}}(ctx context.Context, input *{{$in.GoType $currentFile.GoPkg.Path}}) (*{{$out.GoType $currentFile.GoPkg.Path}}, error) {
+	return nil, fmt.Errorf("method not implemented")
 }
-
-{{end}} {{/* streaming ifs */}}
-{{end}}{{end}} {{/* range with */}}
+{{end}}
