@@ -3,7 +3,7 @@ package {{.File.Package}}_sdk
 {{- $file := .File}}
 
 import (
-{{$namespacedPackage := .File.Package}}{{$namespacedPackage}}  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
+{{.File.Package}}  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
 )
 
 type Repository interface {
@@ -12,7 +12,8 @@ type Repository interface {
 
 
 // ------------------------- Public SDK -----------------------------
-{{$pkg := "pb"}}
+{{$pkg := {{.File.Package}}}}
+type Sdk struct {}
 
 
 {{range $m := .Service.Method}}
