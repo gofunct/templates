@@ -1,7 +1,6 @@
-package sdk
+package {{.File.Package}}_sdk
 
 {{- $file := .File}}
-package {{.File.Package}}
 
 import (
 "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
