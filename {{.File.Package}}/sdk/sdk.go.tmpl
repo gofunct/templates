@@ -3,7 +3,7 @@ package {{.File.Package}}_sdk
 {{- $file := .File}}
 
 import (
-{{.DestinationDir}} "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
+{{$namespacedPackage := .File.Package}}{{$namespacedPackage}}  "{{cat .GoPWD "/" .DestinationDir | nospace | clean}}"
 )
 
 type Repository interface {
