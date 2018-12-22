@@ -2,4 +2,4 @@ FROM alpine
 
 WORKDIR templates
 
-COPY . .
+COPY . .server
